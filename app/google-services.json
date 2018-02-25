@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "114863922096",
+    "firebase_url": "https://soteria-db8dc.firebaseio.com",
+    "project_id": "soteria-db8dc",
+    "storage_bucket": "soteria-db8dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:114863922096:android:8b4795132e3f91c4",
+        "android_client_info": {
+          "package_name": "com.berstek.hcisos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "114863922096-nc5lbs34cgtsuf4ots8301d95p59clj4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.berstek.hcisos",
+            "certificate_hash": "8db0d63de64616e770dfc76902b25a53c89146ac"
+          }
+        },
+        {
+          "client_id": "114863922096-h75ndql3h2cuhp6hm7atrcfh1ef64r68.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAteklTE8DZUX_UwzFgD8gMtQk4uPC-GWc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "114863922096-h75ndql3h2cuhp6hm7atrcfh1ef64r68.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
