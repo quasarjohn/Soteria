@@ -20,9 +20,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 dependencies {
+    compile project(':openCVLibrary320')
+
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
@@ -41,6 +47,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:11.8.0'
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     implementation 'com.afollestad:assent:0.2.5'
+
+    compile 'org.tensorflow:tensorflow-lite:+'
+
+
 }
 
 

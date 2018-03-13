@@ -6,17 +6,22 @@
     android:layout_height="match_parent"
     tools:context="com.berstek.hcisos.view.driver_alarm.DriverAlaramActivity">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
+    <FrameLayout
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/emma"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="w,16:9"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <org.opencv.android.JavaCameraView
+            android:id="@+id/my_java_camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:largeHeap="true"
+            app:show_fps="true" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textView4"
@@ -45,7 +50,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/speedTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -63,36 +68,22 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-light"
-        android:text="Eyes Closed Duration"
+        android:text="Classification"
         android:textColor="@color/primaryTextColor"
         android:textSize="@dimen/font_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/speedTxt" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/classificationTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="34s"
+        android:text="Sleeping"
         android:textColor="@color/primaryTextColor"
         android:textSize="@dimen/font_34"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintEnd_toEndOf="@+id/imageView3"
-        app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_alert_yellow" />
 
 </android.support.constraint.ConstraintLayout>
