@@ -48,7 +48,7 @@ public class DriverAlaramActivity extends AppCompatActivity
 
     cam = findViewById(R.id.my_java_camera);
 
-    cam.setCameraIndex(1);
+    cam.setCameraIndex(0);
     cam.setVisibility(SurfaceView.VISIBLE);
     cam.setCvCameraViewListener(this);
     cam.setMaxFrameSize(640, 480);

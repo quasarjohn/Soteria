@@ -18,6 +18,7 @@ import android.widget.Button;
 import com.berstek.hcisos.R;
 import com.berstek.hcisos.firebase_da.DA;
 import com.berstek.hcisos.model.HelpSelection;
+import com.berstek.hcisos.presentor.AccelerometerPresentor;
 import com.berstek.hcisos.view.driver_alarm.DriverAlaramActivity;
 import com.berstek.hcisos.view.help.HelpActivity;
 import com.berstek.hcisos.view.help.HelpDetailsDialogFragment;
@@ -27,13 +28,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener,
-    View.OnClickListener,
+    View.OnClickListener, FalseAlarmCheckFragment.FalseAlarmCheckFragmentCallback,
 
     //listens to selection made on the HelpSelectionDialogFragment
     HelpSelectionDialogFragment.HelpSelectionDfCallback,
 
     //listens to action made on the HelpDetailsDialogFragment
-    HelpDetailsDialogFragment.HelpDetailsDfCallback {
+    HelpDetailsDialogFragment.HelpDetailsDfCallback,
+
+    AccelerometerPresentor.AccelerometerPresentorCallback {
 
   private Button mHelpBtn, mDriverAlarmBtn;
 
@@ -42,13 +45,16 @@ public class MainActivity extends AppCompatActivity
 
   private Bundle bundle;
 
+  private AccelerometerPresentor accelerometerPresentor;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
     bundle = new Bundle();
-
+    accelerometerPresentor = new AccelerometerPresentor(this);
+    accelerometerPresentor.setAccelerometerPresentorCallback(this);
 
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -146,5 +152,16 @@ public class MainActivity extends AppCompatActivity
     Intent intent = new Intent(MainActivity.this, HelpActivity.class);
     intent.putExtras(bundle);
     startActivity(intent);
+  }
+
+  @Override
+  public void onSuddenStop(int speed) {
+    FalseAlarmCheckFragment checkFragment = new FalseAlarmCheckFragment();
+    checkFragment.show(getFragmentManager(), null);
+  }
+
+  @Override
+  public void onCarAccidentDetected() {
+
   }
 }
