@@ -18,8 +18,11 @@ public class AccelerometerPresentor implements SensorEventListener {
 
   private long lastUpdate = 0;
   private float last_x, last_y, last_z;
-  //30 meter per second
-  private static final int SPEED_THRESHOLD = 30;
+
+  //1.7 meter per second or 6km per hour
+  //increase this in production. But since I test the
+  // change in acceleration manually, i have to set lower values
+  private static final int SPEED_THRESHOLD = 17;
 
   public AccelerometerPresentor(Activity activity) {
     this.activity = activity;
@@ -48,7 +51,7 @@ public class AccelerometerPresentor implements SensorEventListener {
 
         float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 100;
 
-        //if the sudden change in velocity is more than 30km/hour,
+        //if the sudden change in velocity is more than 60km/hour,
         // notify user that a distress call will be sent
         if (speed > SPEED_THRESHOLD) {
           //convert to km per hour
