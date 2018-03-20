@@ -154,14 +154,29 @@ public class MainActivity extends AppCompatActivity
     startActivity(intent);
   }
 
+  private FalseAlarmCheckFragment checkFragment;
+
   @Override
   public void onSuddenStop(int speed) {
-    FalseAlarmCheckFragment checkFragment = new FalseAlarmCheckFragment();
+    if (checkFragment != null) {
+      checkFragment.dismiss();
+    }
+
+    checkFragment = new FalseAlarmCheckFragment();
+    checkFragment.setFalseAlarmCheckFragmentCallback(this);
     checkFragment.show(getFragmentManager(), null);
   }
 
+  //if the user does not cancel, it will automatically send a distress call
   @Override
   public void onCarAccidentDetected() {
-
+    bundle.putString("selection", "Car Accident");
+    bundle.putString("details", "Automatically Triggered. " +
+        "Possible car accident. Driver may have lost consciousness");
+    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+    intent.putExtras(bundle);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    startActivity(intent);
   }
 }

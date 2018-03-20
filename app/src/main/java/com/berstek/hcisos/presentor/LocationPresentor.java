@@ -32,8 +32,11 @@ public class LocationPresentor {
 
   private String details, selection;
 
+  private long timeStamp;
+
 
   public LocationPresentor(Activity activity) {
+    timeStamp = System.currentTimeMillis();
     emergencyDA = new EmergencyDA();
 
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
@@ -75,7 +78,7 @@ public class LocationPresentor {
 
     Emergency emergency = new Emergency();
     emergency.setUserLocation(userLocation);
-    emergency.setTime_stamp(System.currentTimeMillis());
+    emergency.setTime_stamp(timeStamp);
     emergency.setDetails(details);
     emergency.setType(selection);
 
