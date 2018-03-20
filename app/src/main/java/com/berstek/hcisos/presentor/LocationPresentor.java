@@ -73,11 +73,11 @@ public class LocationPresentor {
   private void onLocationChanged(Location location) {
     UserLocation userLocation = new UserLocation();
     userLocation.setLatitude(location.getLatitude());
-    userLocation.setLongitute(location.getLongitude());
+    userLocation.setLongitude(location.getLongitude());
     locationPresentorCallback.onLocationUpdated(userLocation);
 
     Emergency emergency = new Emergency();
-    emergency.setUserLocation(userLocation);
+    emergency.setUser_location(userLocation);
     emergency.setTime_stamp(timeStamp);
     emergency.setDetails(details);
     emergency.setType(selection);

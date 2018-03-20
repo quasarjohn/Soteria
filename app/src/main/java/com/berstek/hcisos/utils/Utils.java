@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Utils {
 
@@ -19,5 +20,9 @@ public class Utils {
 
   public void loadImage(String url, ImageView img, int size) {
     Glide.with(context).load(url).skipMemoryCache(true).override(size, size).into(img);
+  }
+
+  public static String getUid() {
+    return FirebaseAuth.getInstance().getCurrentUser().getUid();
   }
 }

@@ -65,8 +65,8 @@ public class HelpActivity extends AppCompatActivity
   public void onLocationUpdated(UserLocation userLocation) {
     //do something with the userLocation object
     //temporarily using neu coordinates
-    etaPresentor.calculateEta(userLocation.getLatitude(),
-        userLocation.getLongitute(), 14.7192, 121.1071);
+//    etaPresentor.calculateEta(userLocation.getLatitude(),
+//        userLocation.getLongitude(), 14.7192, 121.1071);
   }
 
   @Override

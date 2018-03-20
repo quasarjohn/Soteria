@@ -77,11 +77,13 @@ public class EtaPresentor {
         new DA().log(diffDistance);
 
         try {
-          unitPerSec = (diffDistance / (diffTime * 1.0)) / 5;
+          unitPerSec = (diffDistance / (diffTime * 1.0)) * 5;
 
           double timeRemainingInSec = (updatedDistance / unitPerSec);
 
-          etaPresentorCallback.onEtaCalculated((int) timeRemainingInSec / 60 + "");
+          if (unitPerSec > 0) {
+            etaPresentorCallback.onEtaCalculated((int) timeRemainingInSec / 60 + "");
+          }
           lastDistance = updatedDistance;
 
           activity.runOnUiThread(new Runnable() {

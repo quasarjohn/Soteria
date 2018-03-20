@@ -6,21 +6,23 @@ import java.util.ArrayList;
 
 public class Emergency {
 
-  private UserLocation userLocation;
+  private UserLocation user_location;
   private long time_stamp;
   private String type, details;
   private ArrayList<String> attachments_url;
   private Status status;
 
+  private String rt_uid;
+
   @Exclude
   private String key;
 
-  public UserLocation getUserLocation() {
-    return userLocation;
+  public UserLocation getUser_location() {
+    return user_location;
   }
 
-  public void setUserLocation(UserLocation userLocation) {
-    this.userLocation = userLocation;
+  public void setUser_location(UserLocation user_location) {
+    this.user_location = user_location;
   }
 
   public long getTime_stamp() {
@@ -73,5 +75,13 @@ public class Emergency {
 
   public enum Status {
     PENDING, DISPATCHED, RESLOVED
+  }
+
+  public String getRt_uid() {
+    return rt_uid;
+  }
+
+  public void setRt_uid(String rt_uid) {
+    this.rt_uid = rt_uid;
   }
 }

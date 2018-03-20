@@ -2,7 +2,7 @@ package com.berstek.hcisos.model;
 
 public class UserLocation {
 
-  private double latitude, longitute;
+  private double latitude, longitude;
 
   public double getLatitude() {
     return latitude;
@@ -12,11 +12,11 @@ public class UserLocation {
     this.latitude = latitude;
   }
 
-  public double getLongitute() {
-    return longitute;
+  public double getLongitude() {
+    return longitude;
   }
 
-  public void setLongitute(double longitute) {
-    this.longitute = longitute;
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
   }
 }

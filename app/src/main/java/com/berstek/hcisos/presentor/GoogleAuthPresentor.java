@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.berstek.hcisos.callback.AuthCallback;
+import com.berstek.hcisos.firebase_da.UserDA;
+import com.berstek.hcisos.model.User;
 import com.berstek.hcisos.utils.RequestCodes;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -26,6 +28,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class GoogleAuthPresentor implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+
 
   private AppCompatActivity activity;
 
@@ -74,6 +77,16 @@ public class GoogleAuthPresentor implements View.OnClickListener, GoogleApiClien
               @Override
               public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+
+                  User u = new User();
+                  u.setDate_joined(System.currentTimeMillis());
+                  u.setEmail(account.getEmail());
+                  u.setFirst_name(account.getGivenName());
+                  u.setLast_name(account.getFamilyName());
+
+                  //TODO check if user exists to avoid overriding existing data
+                  new UserDA().addUser(u);
+
                   FirebaseUser user = auth.getCurrentUser();
                   googleAuthCallback.onAuthSuccess(user);
 
