@@ -57,7 +57,8 @@ public class AccelerometerPresentor implements SensorEventListener {
           //convert to km per hour
           int conversion = (int) (speed * 60 * 60 / 1000);
           new DA().log("VELOCITY CHANGED: " + conversion + " Km / hour");
-          accelerometerPresentorCallback.onSuddenStop(conversion);
+          if (accelerometerPresentorCallback != null)
+            accelerometerPresentorCallback.onSuddenStop(conversion);
         }
 
         last_x = x;

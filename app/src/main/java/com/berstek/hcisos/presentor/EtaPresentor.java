@@ -1,8 +1,11 @@
 package com.berstek.hcisos.presentor;
 
 
+import android.app.Activity;
 import android.os.Handler;
+import android.widget.TextView;
 
+import com.berstek.hcisos.R;
 import com.berstek.hcisos.firebase_da.DA;
 
 /*
@@ -12,65 +15,99 @@ travelling
 
 public class EtaPresentor {
 
-  private boolean firstRun = true;
-
-  private double totalDistance = 0;
-  private double initialDistance, currentDistance, difference;
-
-  private long prevTimeStamp, currentTimeStamp;
-
-  //make the numbers larger to avoid zero operations
-  private double mult = 10000;
-
   private Handler handler = new Handler();
+
+  private double lastDistance, updatedDistance, diffDistance;
+
+
+  private long lastTime, currentTime;
+
+  double diffTime;
+
+  private Activity activity;
+
+  double unitPerSec;
+
+  private double mult = 1000000.0d;
+
+  boolean firstRun = true;
+
+  private TextView xTxt, yTxt, lastTxt, currentTxt, diffTxt, unitPerSecTxt;
+
+  public EtaPresentor(Activity activity) {
+    this.activity = activity;
+
+    xTxt = activity.findViewById(R.id.xTxt);
+    yTxt = activity.findViewById(R.id.yTxt);
+
+    lastTxt = activity.findViewById(R.id.lastTxt);
+    currentTxt = activity.findViewById(R.id.currentTxt);
+    diffTxt = activity.findViewById(R.id.diffTxt);
+    unitPerSecTxt = activity.findViewById(R.id.unitPerSecTxt);
+  }
 
   public void calculateEta(double x, double y, double x1, double y1) {
 
-    //first, calculate the initial distance
+    xTxt.setText(x + "");
+    yTxt.setText(y + "");
+
+
     if (firstRun) {
-      initialDistance = Math.abs(calculateDistance(x, y, x1, y1));
-      prevTimeStamp = System.currentTimeMillis();
 
-      totalDistance = initialDistance;
+      if (lastDistance == 0) {
+        lastDistance = calculateDistance(x, y, x1, y1);
+      }
 
+      lastTime = System.currentTimeMillis();
+
+      lastTxt.setText(lastDistance + " distance 5 secs ago");
+
+      firstRun = false;
     }
 
     handler.postDelayed(new Runnable() {
       @Override
       public void run() {
-        //then calculate the current distance between two points
-        currentDistance = Math.abs(calculateDistance(x, y, x1, y1));
-        //save when the last distance was recorded
-        currentTimeStamp = System.currentTimeMillis();
+        updatedDistance = calculateDistance(x, y, x1, y1);
+        currentTime = System.currentTimeMillis();
 
-        difference = Math.abs(initialDistance - currentDistance) ;
-        firstRun = false;
+        diffDistance = Math.abs(lastDistance - updatedDistance);
+        diffTime = currentTime - lastTime;
 
-        double unitPerSec = (difference / (Math.abs(currentTimeStamp - prevTimeStamp))) / 5;
+        new DA().log(diffDistance);
 
+        try {
+          unitPerSec = (diffDistance / (diffTime * 1.0)) / 5;
 
-        if (unitPerSec != 0) {
-          try {
-            double time = totalDistance / unitPerSec;
-            double timeInMins = time / 60000;
-            new DA().log((totalDistance / unitPerSec) / 1000);
+          double timeRemainingInSec = (updatedDistance / unitPerSec);
 
+          etaPresentorCallback.onEtaCalculated((int) timeRemainingInSec / 60 + "");
+          lastDistance = updatedDistance;
 
-            etaPresentorCallback.onEtaCalculated((int) timeInMins + "");
-
-          } catch (ArithmeticException e) {
-
-          }
+          activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              currentTxt.setText(updatedDistance + " current distance");
+              diffTxt.setText(diffDistance + " in " + (diffTime / 5) + " secs");
+              unitPerSecTxt.setText(unitPerSec + " units per secs");
+            }
+          });
+        } catch (ArithmeticException e) {
+          e.printStackTrace();
         }
 
-        calculateEta(x, y, x1, y1);
+        firstRun = true;
+
+
       }
-    }, 2000);
+    }, 5000);
 
   }
 
   private double calculateDistance(double x, double y, double x1, double y1) {
-    return Math.sqrt((x1 * x1 - x * x) + (y1 * y1 - y * y));
+    double x2 = x1 - x;
+    double y2 = y1 - y;
+    return Math.sqrt((x2 * x2) + (y2 * y2)) * mult;
   }
 
   private EtaPresentorCallback etaPresentorCallback;

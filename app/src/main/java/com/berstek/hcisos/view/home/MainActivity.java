@@ -151,6 +151,8 @@ public class MainActivity extends AppCompatActivity
     bundle.putString("details", detail);
     Intent intent = new Intent(MainActivity.this, HelpActivity.class);
     intent.putExtras(bundle);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     startActivity(intent);
   }
 
@@ -178,5 +180,17 @@ public class MainActivity extends AppCompatActivity
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     startActivity(intent);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    accelerometerPresentor.setAccelerometerPresentorCallback(null);
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    accelerometerPresentor.setAccelerometerPresentorCallback(null);
   }
 }

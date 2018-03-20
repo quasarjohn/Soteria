@@ -34,7 +34,7 @@ public class HelpActivity extends AppCompatActivity
     details = getIntent().getExtras().getString("details");
     selection = getIntent().getExtras().getString("selection");
 
-    etaPresentor = new EtaPresentor();
+    etaPresentor = new EtaPresentor(this);
     etaPresentor.setEtaPresentorCallback(this);
 
     Assent.setActivity(this, this);

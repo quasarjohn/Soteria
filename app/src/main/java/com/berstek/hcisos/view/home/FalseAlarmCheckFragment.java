@@ -24,7 +24,7 @@ public class FalseAlarmCheckFragment extends CustomDialogFragment
   private Button cancelBtn;
   private TextView timeTxt;
 
-  private int startTime = 20;
+  private int startTime = 5;
 
 
   public FalseAlarmCheckFragment() {
