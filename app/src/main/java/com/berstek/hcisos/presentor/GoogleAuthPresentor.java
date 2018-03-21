@@ -83,6 +83,7 @@ public class GoogleAuthPresentor implements View.OnClickListener, GoogleApiClien
                   u.setEmail(account.getEmail());
                   u.setFirst_name(account.getGivenName());
                   u.setLast_name(account.getFamilyName());
+                  u.setPhoto_url(account.getPhotoUrl().toString());
 
                   //TODO check if user exists to avoid overriding existing data
                   new UserDA().addUser(u);

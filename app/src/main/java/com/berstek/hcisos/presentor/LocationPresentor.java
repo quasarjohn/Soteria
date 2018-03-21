@@ -70,6 +70,8 @@ public class LocationPresentor {
         Looper.myLooper());
   }
 
+  private boolean firstLoad = true;
+
   private void onLocationChanged(Location location) {
     UserLocation userLocation = new UserLocation();
     userLocation.setLatitude(location.getLatitude());
@@ -77,12 +79,18 @@ public class LocationPresentor {
     locationPresentorCallback.onLocationUpdated(userLocation);
 
     Emergency emergency = new Emergency();
+    emergency.setStatus(0);
     emergency.setUser_location(userLocation);
     emergency.setTime_stamp(timeStamp);
     emergency.setDetails(details);
     emergency.setType(selection);
 
-    emergencyDA.updateEmergency(emergency);
+    if (firstLoad) {
+      emergencyDA.updateEmergency(emergency);
+      firstLoad = false;
+    } else {
+      emergencyDA.updateEmergencyLocation(userLocation);
+    }
 
     reverseGeocode(location.getLatitude(), location.getLongitude());
   }

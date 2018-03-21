@@ -5,7 +5,10 @@ import java.util.HashMap;
 public class ResponseTeam {
 
   private String leader_uid;
-  private HashMap<String, Integer> members;
+  private HashMap<String, Boolean> members;
+  private String team_name;
+
+  private UserLocation user_location;
 
   //uid of the emergency the team is dispatched to
   private String dispatched_to;
@@ -19,11 +22,11 @@ public class ResponseTeam {
     this.leader_uid = leader_uid;
   }
 
-  public HashMap<String, Integer> getMembers() {
+  public HashMap<String, Boolean> getMembers() {
     return members;
   }
 
-  public void setMembers(HashMap<String, Integer> members) {
+  public void setMembers(HashMap<String, Boolean> members) {
     this.members = members;
   }
 
@@ -41,5 +44,21 @@ public class ResponseTeam {
 
   public void setDispatched_on(long dispatched_on) {
     this.dispatched_on = dispatched_on;
+  }
+
+  public String getTeam_name() {
+    return team_name;
+  }
+
+  public void setTeam_name(String team_name) {
+    this.team_name = team_name;
+  }
+
+  public UserLocation getUser_location() {
+    return user_location;
+  }
+
+  public void setUser_location(UserLocation user_location) {
+    this.user_location = user_location;
   }
 }

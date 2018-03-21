@@ -1,121 +1,84 @@
 package com.berstek.hcisos.presentor;
 
+import android.content.Context;
 
-import android.app.Activity;
-import android.os.Handler;
-import android.widget.TextView;
 
-import com.berstek.hcisos.R;
-import com.berstek.hcisos.firebase_da.DA;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
-/*
-Calculates the ETA based on the absolute distance between two points, not the actual path they are
-travelling
- */
+import com.berstek.hcisos.model.EtaDetails;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EtaPresentor {
 
-  private Handler handler = new Handler();
+  private Context activity;
+  private ObjectMapper objectMapper;
 
-  private double lastDistance, updatedDistance, diffDistance;
-
-
-  private long lastTime, currentTime;
-
-  double diffTime;
-
-  private Activity activity;
-
-  double unitPerSec;
-
-  private double mult = 1000000.0d;
-
-  boolean firstRun = true;
-
-  private TextView xTxt, yTxt, lastTxt, currentTxt, diffTxt, unitPerSecTxt;
-
-  public EtaPresentor(Activity activity) {
+  public EtaPresentor(Context activity) {
     this.activity = activity;
-
-    xTxt = activity.findViewById(R.id.xTxt);
-    yTxt = activity.findViewById(R.id.yTxt);
-
-    lastTxt = activity.findViewById(R.id.lastTxt);
-    currentTxt = activity.findViewById(R.id.currentTxt);
-    diffTxt = activity.findViewById(R.id.diffTxt);
-    unitPerSecTxt = activity.findViewById(R.id.unitPerSecTxt);
+    objectMapper = new ObjectMapper();
   }
 
-  public void calculateEta(double x, double y, double x1, double y1) {
+  private final String requestUrl = "https://maps.googleapis.com/maps/api/directions/json?" +
+      "origin=%s&destination=%s&key=AIzaSyA6-ONd9DD7Yhis_D-zylBQNyDzV_0pAd4";
 
-    xTxt.setText(x + "");
-    yTxt.setText(y + "");
+  private RequestQueue requestQueue;
 
+  public void getEta(double x, double y, double x1, double y1) {
 
-    if (firstRun) {
-
-      if (lastDistance == 0) {
-        lastDistance = calculateDistance(x, y, x1, y1);
-      }
-
-      lastTime = System.currentTimeMillis();
-
-      lastTxt.setText(lastDistance + " distance 5 secs ago");
-
-      firstRun = false;
+    if (requestQueue == null) {
+      requestQueue = Volley.newRequestQueue(activity);
     }
 
-    handler.postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        updatedDistance = calculateDistance(x, y, x1, y1);
-        currentTime = System.currentTimeMillis();
+    String requestUrlFinal = String.format(requestUrl, x + "," + y, x1 + "," + y1);
 
-        diffDistance = Math.abs(lastDistance - updatedDistance);
-        diffTime = currentTime - lastTime;
+    StringRequest etaRequest = new StringRequest(Request.Method.GET, requestUrlFinal,
+        new Response.Listener<String>() {
+          @Override
+          public void onResponse(String response) {
+            TypeReference<HashMap<String, Object>> typeRef
+                = new TypeReference<HashMap<String, Object>>() {
+            };
 
-        new DA().log(diffDistance);
+            try {
+              HashMap<String, Object> gw = objectMapper.readValue(response, typeRef);
+              ArrayList routes = (ArrayList) gw.get("routes");
+              if (routes.size() > 0) {
+                HashMap<String, Object> values = (HashMap<String, Object>) routes.get(0);
+                ArrayList legs = (ArrayList) values.get("legs");
 
-        try {
-          unitPerSec = (diffDistance / (diffTime * 1.0)) * 5;
+                if (legs.size() > 0) {
+                  EtaDetails etaDetails = objectMapper.convertValue(legs.get(0), EtaDetails.class);
+                  etaPresentorCallback.onEtaCalculated(etaDetails);
+                }
+              }
 
-          double timeRemainingInSec = (updatedDistance / unitPerSec);
-
-          if (unitPerSec > 0) {
-            etaPresentorCallback.onEtaCalculated((int) timeRemainingInSec / 60 + "");
-          }
-          lastDistance = updatedDistance;
-
-          activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-              currentTxt.setText(updatedDistance + " current distance");
-              diffTxt.setText(diffDistance + " in " + (diffTime / 5) + " secs");
-              unitPerSecTxt.setText(unitPerSec + " units per secs");
+            } catch (IOException e) {
+              e.printStackTrace();
             }
-          });
-        } catch (ArithmeticException e) {
-          e.printStackTrace();
-        }
-
-        firstRun = true;
-
-
+          }
+        }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
       }
-    }, 5000);
+    });
 
-  }
-
-  private double calculateDistance(double x, double y, double x1, double y1) {
-    double x2 = x1 - x;
-    double y2 = y1 - y;
-    return Math.sqrt((x2 * x2) + (y2 * y2)) * mult;
+    requestQueue.add(etaRequest);
   }
 
   private EtaPresentorCallback etaPresentorCallback;
 
   public interface EtaPresentorCallback {
-    void onEtaCalculated(String minutes);
+    void onEtaCalculated(EtaDetails eta);
   }
 
   public void setEtaPresentorCallback(EtaPresentorCallback etaPresentorCallback) {

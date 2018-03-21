@@ -10,7 +10,7 @@ public class Emergency {
   private long time_stamp;
   private String type, details;
   private ArrayList<String> attachments_url;
-  private Status status;
+  private int status;
 
   private String rt_uid;
 
@@ -57,11 +57,11 @@ public class Emergency {
     this.attachments_url = attachments_url;
   }
 
-  public Status getStatus() {
+  public int getStatus() {
     return status;
   }
 
-  public void setStatus(Status status) {
+  public void setStatus(int status) {
     this.status = status;
   }
 
